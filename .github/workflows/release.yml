@@ -110,6 +110,9 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Build
+        run: pnpm --filter @pi-gui/desktop run build
+
       - name: Package Linux AppImage
         run: |
           cd apps/desktop
