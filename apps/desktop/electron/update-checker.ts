@@ -7,6 +7,7 @@ const RELEASES_PAGE =
 
 const CHECK_INTERVAL_MS = 4 * 60 * 60 * 1000; // 4 hours
 const INITIAL_DELAY_MS = 15_000; // 15 seconds after launch
+const updatesDisabled = process.env.PI_APP_DISABLE_UPDATES === "1";
 
 export type UpdateCheckResult =
   | { status: "up-to-date"; currentVersion: string; latestVersion: string }
@@ -64,6 +65,10 @@ export async function checkForUpdate(): Promise<UpdateCheckResult> {
 }
 
 export function initUpdateChecker(): () => void {
+  if (updatesDisabled) {
+    return () => {};
+  }
+
   const noop = (e: Error) =>
     console.warn("Update check failed:", e.message);
 
