@@ -7,6 +7,7 @@ const RELEASES_PAGE =
 
 const CHECK_INTERVAL_MS = 4 * 60 * 60 * 1000; // 4 hours
 const INITIAL_DELAY_MS = 15_000; // 15 seconds after launch
+const updatesDisabled = process.env.PI_APP_DISABLE_UPDATES === "1";
 
 async function checkForUpdate(): Promise<void> {
   const res = await net.fetch(RELEASES_URL, {
@@ -31,6 +32,10 @@ async function checkForUpdate(): Promise<void> {
 }
 
 export function initUpdateChecker(): () => void {
+  if (updatesDisabled) {
+    return () => {};
+  }
+
   const noop = (e: Error) =>
     console.warn("Update check failed:", e.message);
 
